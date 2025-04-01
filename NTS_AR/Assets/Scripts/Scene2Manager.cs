@@ -6,18 +6,23 @@ using UnityEngine.XR.ARSubsystems;
 
 public class Scene2Manager : MonoBehaviour
 {
+
     public ARRaycastManager RaycastManager;
     public TrackableType TypeToTrack = TrackableType.PlaneWithinBounds;
     public GameObject PrefabToInstantiate;
     public PlayerInput PlayerInput;
+    public List<Material> Materials;
     
     private InputAction touchPressAction;
     private InputAction touchPosAction;
+    
+    private List<GameObject> instantiatedCubes;
     // Start is called before the first frame update
     void Start()
     {
         touchPressAction = PlayerInput.actions["TouchPress"];
         touchPosAction = PlayerInput.actions["TouchPos"];
+        instantiatedCubes = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -38,7 +43,18 @@ public class Scene2Manager : MonoBehaviour
         if (hits.Count > 0)
         {
             ARRaycastHit firstHit = hits[0];
-            Instantiate(PrefabToInstantiate, firstHit.pose.position, firstHit.pose.rotation);
+            GameObject cube = Instantiate(PrefabToInstantiate, firstHit.pose.position, firstHit.pose.rotation);
+            instantiatedCubes.Add(cube);
+        }
+    }
+    
+    public void ChangeColor()
+    {
+        foreach (GameObject cube in instantiatedCubes)
+        {
+            int randomIndex = Random.Range(0, Materials.Count);
+            Material randomMaterial = Materials[randomIndex];
+            cube.GetComponent<MeshRenderer>().material = randomMaterial;
         }
     }
 }
