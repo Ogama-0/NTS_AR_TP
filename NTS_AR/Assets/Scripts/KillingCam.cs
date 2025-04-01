@@ -28,6 +28,19 @@ public class KillingCam : MonoBehaviour
         {
             return;
         }
+        touchPos = touchPosAction.ReadValue<Vector2>();
+        Ray ray = cam.ScreenPointToRay(touchPos);
+        
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject hitObj = hit.collider.gameObject;
+            if (hitObj.tag == "Enemy")
+            {
+                var clone = Instantiate(ParticleEffect, hitObj.transform.position, Quaternion.identity);
+                clone.transform.localScale = hitObj.transform.localScale;
+                Destroy(hitObj);
+            }
+        }
 
     }
 }
