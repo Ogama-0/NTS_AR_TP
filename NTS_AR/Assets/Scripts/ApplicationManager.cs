@@ -9,8 +9,14 @@ public class NewBehaviourScript : MonoBehaviour {
     private int EnemyNumber = 0;
     public float SpawnRange = 3f;
     // Start is called before the first frame update
+
+    public AudioClip soundEffect;
+    private AudioSource audioSource;
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = soundEffect;
         SpawnEnemy(MaxEnemyNumber);
     }
 

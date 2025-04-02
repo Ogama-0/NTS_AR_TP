@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class KillingCam : MonoBehaviour
 {
@@ -13,10 +15,21 @@ public class KillingCam : MonoBehaviour
     private InputAction touchPressAction;
     private InputAction touchPosAction;
 
+    private int killed = 0;
+    public TMP_Text InputField;
+
+    public AudioClip soundEffect;
+    private AudioSource audioSource;
+
     public bool Win = false;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = soundEffect;
+
+        InputField.text = "killed =  0";
+
         cam = GetComponent<Camera>();
         touchPressAction = playerInput.actions["TouchPress"];
         touchPosAction = playerInput.actions["TouchPos"];
@@ -38,17 +51,38 @@ public class KillingCam : MonoBehaviour
             GameObject hitObj = hit.collider.gameObject;
             if (hitObj.tag == "Enemy")
             {
+                killed += 1;
+                audioSource.Play();
                 var clone = Instantiate(ParticleEffect, hitObj.transform.position, Quaternion.identity);
                 clone.transform.localScale = hitObj.transform.localScale;
                 Destroy(hitObj);
             }
             if (hitObj.tag == "king")
             {
+                killed += 1000;
+                audioSource.Play();
                 Destroy(hitObj);
                 Win = true;
 
             }
         }
 
+        if (killed > 10)
+        {
+            Win = true;
+        }
+
+        if (Win)
+        {
+            InputField.text = "GG YOU WIN";
+        }
+        else
+        {
+            InputField.text = "killed = " + killed;
+        }
+
+
     }
+
+    
 }
