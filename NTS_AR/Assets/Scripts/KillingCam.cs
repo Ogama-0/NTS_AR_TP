@@ -12,6 +12,8 @@ public class KillingCam : MonoBehaviour
     public PlayerInput playerInput;
     private InputAction touchPressAction;
     private InputAction touchPosAction;
+
+    public bool Win = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +41,12 @@ public class KillingCam : MonoBehaviour
                 var clone = Instantiate(ParticleEffect, hitObj.transform.position, Quaternion.identity);
                 clone.transform.localScale = hitObj.transform.localScale;
                 Destroy(hitObj);
+            }
+            if (hitObj.tag == "king")
+            {
+                Destroy(hitObj);
+                Win = true;
+
             }
         }
 
